@@ -12,3 +12,9 @@
 2. Go to the cloned repository: `$ cd VulnX`
 2. Install the required Python modules: `$ pip install -r requirements.txt`
 3. Run VulnX: `$ py VulnX.py`
+
+# Pwned sites using VulnX
+- https://sippin.cc
+- https://sanitary.wtf
+- https://triaddragons.xyz
+- https://mcleak.info

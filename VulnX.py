@@ -1,4 +1,4 @@
-# ShellX
+# VulnX
 # Author: checksum
 
 import requests

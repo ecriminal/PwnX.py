@@ -32,8 +32,8 @@ def print_info(a):
 def print_warning(a):
     print(f'{Fore.LIGHTWHITE_EX}[ {Fore.LIGHTYELLOW_EX}WARN {Fore.LIGHTWHITE_EX}] {Fore.RESET}{a}')
 
-def upload_file(url, endpoint, file_path, file_name, secret=None):
-    data = {'sharex': (os.path.basename(file_path), open(file_path, 'rb'), 'text/plain')}
+def upload_file(url, endpoint, file_path, file_name, form_name, secret=None):
+    data = {form_name: (os.path.basename(file_path), open(file_path, 'rb'), 'text/plain')}
 
     if secret:
         data.update({'secret': secret})
@@ -91,7 +91,8 @@ def main():
     parser = argparse.ArgumentParser(usage='%(prog)s [options]')
     parser.add_argument('-u', '--url', help='target URL', dest='url', metavar='')
     parser.add_argument('-f', '--file', help='file to upload', dest='path', metavar='')
-    parser.add_argument('-s', '--secret', help='ShareX secret (optional)', dest='secret', metavar='')
+    parser.add_argument('-s', '--secret', help='ShareX secret', dest='secret', metavar='')
+    parser.add_argument('-n', '--form-name', help='Multipart file form name', dest='form_name', metavar='', default='sharex')
 
     args = parser.parse_args()
     
@@ -99,6 +100,7 @@ def main():
     url = args.url
     file_path = args.path
     secret = args.secret
+    form_name = args.form_name
 
     # print help if no arguments are given
     if not url and not file_path and not secret:
@@ -151,7 +153,7 @@ def main():
     try:
         file_name = os.path.basename(file_path) 
 
-        res = upload_file(target_url, endpoint, file_path, file_name, secret)
+        res = upload_file(target_url, endpoint, file_path, file_name, form_name, secret)
         
         code = res.status_code
         res_body = res.text.strip()

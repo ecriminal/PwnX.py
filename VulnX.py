@@ -17,7 +17,7 @@ BANNER = fr''' {Fore.WHITE}_____     _     __ __{Fore.LIGHTBLACK_EX}
  \___/|___|_|_|_|__|__| {Fore.RESET}By {Fore.LIGHTGREEN_EX}checksum {Fore.LIGHTYELLOW_EX}(@0daySkid){Fore.RESET}
 '''
 
-ENDPOINTS = ('upload.php', 'up.php', 'sharex.php')
+ENDPOINTS = ('upload.php', 'up.php', 'sharex.php', 'file.php', 'files.php')
 KEYWORDS = ('File upload failed - CHMOD/Folder doesn\'t exist?', 'File not found.', 'No post data recieved')
 
 def print_error(a):

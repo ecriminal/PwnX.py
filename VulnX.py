@@ -8,7 +8,7 @@ import validators
 import sys
 from colorama import Fore, init
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 # constants
 BANNER = fr''' {Fore.WHITE}_____     _     __ __{Fore.LIGHTBLACK_EX}

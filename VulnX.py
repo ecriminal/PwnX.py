@@ -47,7 +47,7 @@ def is_online(url):
     except:
         pass
 
-def get_endpoint(url):
+def brute_endpoint(url):
     try:
         for endpoint in ENDPOINTS:
             res = requests.get(url + '/' + endpoint)
@@ -93,6 +93,7 @@ def main():
     parser.add_argument('-f', '--file', help='file to upload', dest='path', metavar='')
     parser.add_argument('-s', '--secret', help='ShareX secret', dest='secret', metavar='')
     parser.add_argument('-n', '--form-name', help='Multipart file form name', dest='form_name', metavar='', default='sharex')
+    parser.add_argument('-e', '--endpoint', help='File upload endpoint', dest='endpoint', metavar='')
 
     args = parser.parse_args()
     
@@ -101,6 +102,7 @@ def main():
     file_path = args.path
     secret = args.secret
     form_name = args.form_name
+    endpoint = args.endpoint
 
     # print help if no arguments are given
     if not url and not file_path and not secret:
@@ -137,14 +139,15 @@ def main():
     print_sucess('target is online')
 
     # check if target is vulnerable
-    endpoint = get_endpoint(target_url)
-
     if not endpoint:
-        print_error('target is not vulnerable')
-        
-        if target_url.count('/') > 2:
-            print_info(f'try: {Fore.LIGHTMAGENTA_EX}{format_url(target_url, False)}{Fore.RESET} as target URL')
-        exit()
+        endpoint = brute_endpoint(target_url)
+
+        if not endpoint:
+            print_error('target is not vulnerable')
+            
+            if target_url.count('/') > 2:
+                print_info(f'try: {Fore.LIGHTMAGENTA_EX}{format_url(target_url, False)}{Fore.RESET} as target URL')
+            exit()
 
     print_sucess(f'target seems vulnerable: {Fore.LIGHTMAGENTA_EX}{target_url}/{endpoint}')
 

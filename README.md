@@ -12,9 +12,3 @@
 2. Go to the cloned repository: `$ cd VulnX`
 2. Install the required Python modules: `$ pip install -r requirements.txt`
 3. Run VulnX: `$ py VulnX.py`
-
-# Pwned sites using VulnX
-- https://sippin.cc (#1 Minecraft ghost cheat)
-- https://sanitary.wtf (One of the most known selfbots)
-- https://triaddragons.xyz (A well-known Minecraft factions clan)
-- https://mcleak.info (#1 Minecraft database lookup tool)

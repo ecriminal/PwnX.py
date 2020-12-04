@@ -14,7 +14,7 @@ __version__ = '0.1.3'
 BANNER = fr''' {Fore.WHITE}_____     _     __ __{Fore.LIGHTBLACK_EX}
 |  |  |{Fore.WHITE}_ _{Fore.LIGHTBLACK_EX}| |{Fore.WHITE}___{Fore.LIGHTBLACK_EX}|  |  |
 |  |  | | | |   |-   -| {Fore.LIGHTRED_EX}v{__version__}{Fore.LIGHTBLACK_EX}
- \___/|___|_|_|_|__|__| {Fore.RESET}By {Fore.LIGHTGREEN_EX}checksum {Fore.LIGHTYELLOW_EX}(@0daySkid){Fore.RESET}
+ \___/|___|_|_|_|__|__| {Fore.RESET}By {Fore.LIGHTGREEN_EX}checksum {Fore.LIGHTYELLOW_EX}(@0xFADE){Fore.RESET}
 '''
 
 ENDPOINTS = ('upload.php', 'up.php', 'sharex.php', 'file.php', 'files.php')

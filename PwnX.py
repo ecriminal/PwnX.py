@@ -1,13 +1,7 @@
-###########################################
-#                                         #
-# Title: PwnX.py, formerly known as VulnX #
-# Author: cs (@KaliLincox on Twitter)     #
-# Date: 03/07/2020, updated 26/02/2021    #
-# Description: Pwn misconfigured sites    #
-# running ShareX custom image uploader    #
-# API through RFI -> RCE.                 #
-#                                         #
-###########################################
+# Title: PwnX.py, formerly known as VulnX
+# Author: cs (@KaliLincox on Twitter)
+# Date: 03/07/2020, updated 26/02/2021
+# Description: Pwn misconfigured sites running ShareX custom image uploader API through RFI -> RCE.
 
 import colorama
 import argparse

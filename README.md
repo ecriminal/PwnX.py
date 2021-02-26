@@ -2,7 +2,7 @@
 
  Pwn misconfigured sites running ShareX custom image uploader API through **RFI -> RCE**.
 
-![alt](https://raw.githubusercontent.com/ecriminal/PulnX/master/images/PwnX.png)
+![alt](https://raw.githubusercontent.com/ecriminal/PwnX/master/images/PwnX.png)
 *XAMPP running as SYSTEM kek*
 
 ## Requirements

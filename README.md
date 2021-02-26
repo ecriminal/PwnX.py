@@ -16,3 +16,11 @@
 2. Go to the cloned repository: `$ cd PwnX.py`
 3. Install the required Python packages: `$ python3 -m pip install -r requirements.txt`
 4. Run PwnX.py: `$ python3 PwnX.py`
+
+## TODO
+
+[ ] Encode PHP web shell payload to bypass WAFs
+[ ] Custom PHP web shell payload command-line option
+[ ] File upload feature in built-in PHP web shell
+[ ] File download feature in built-in PHP web shell
+[ ] Change direction feature in built-in PHP web shell

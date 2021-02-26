@@ -19,8 +19,8 @@
 
 ## TODO
 
-[ ] Encode PHP web shell payload to bypass WAFs
-[ ] Custom PHP web shell payload command-line option
-[ ] File upload feature in built-in PHP web shell
-[ ] File download feature in built-in PHP web shell
-[ ] Change direction feature in built-in PHP web shell
+[] Encode PHP web shell payload to bypass WAFs
+[] Custom PHP web shell payload command-line option
+[] File upload feature in built-in PHP web shell
+[] File download feature in built-in PHP web shell
+[] Change direction feature in built-in PHP web shell

@@ -1,7 +1,4 @@
-import subprocess
 import requests
-import sys
-import os
 
 
 class Shell:
@@ -10,19 +7,11 @@ class Shell:
 
     @staticmethod
     def execute(url, cmd):
-        cmd_stripped = cmd.strip().strip(' ')
+        res = requests.get(url, params={'cmd': cmd})
 
-        if len(cmd_stripped) == 0:
-            return
+        if res.status_code == 200:
+            output = res.text
 
-        if cmd_stripped == 'cls' or cmd_stripped == 'clear':
-            if os.name == 'nt':
-                subprocess.call('cls', shell=True)
-            else:
-                print(end='\x1b[2J')
-            return
+            return output
 
-        elif cmd_stripped == 'exit' or cmd_stripped == 'quit':
-            sys.exit(0)
-
-        return requests.get(url, params={'cmd': cmd}).text
+        raise Exception('unknown response code received: %d' % res.status_code)

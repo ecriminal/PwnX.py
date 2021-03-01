@@ -14,6 +14,7 @@ class Brute:
 
     @staticmethod
     def is_required(url):
+        """ Check if it is required to brute force secret key and secret key field name """
         try:
             res = requests.get(url)
             return not ShareX.Errors.UPLOAD_FAILED.value['content'].lower() in res.text.lower()

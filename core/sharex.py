@@ -4,6 +4,7 @@ from enum import Enum
 
 
 class ShareX:
+
     class Errors(Enum):
         UPLOAD_FAILED = {
             'reason': 'webserver doesn\'t have access to the target folder, folder doesn\'t exist or file name is missing a file extension',

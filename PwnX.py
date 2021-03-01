@@ -61,9 +61,12 @@ def main():
         if args.brute_endpoint:
             if args.verbose:
                 Logger.info('brute forcing endpoint...')
+
             url = Brute.endpoint(url)
+
             if url is None:
                 Logger.error('endpoint not found')
+
             Logger.success(f'endpoint found: \x1b[35m{url}')
 
         if Brute.is_required(url): # check if it's necessary to brute force field name and secret key

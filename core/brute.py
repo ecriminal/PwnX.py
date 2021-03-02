@@ -17,6 +17,7 @@ class Brute:
         """ Check if it is required to brute force secret key and secret key field name """
         try:
             res = requests.get(url)
+
             return not ShareX.Errors.UPLOAD_FAILED.value['content'].lower() in res.text.lower()
         except Exception:
             return True
@@ -29,17 +30,17 @@ class Brute:
 
         for path in Brute.COMMON_PATHS:
             for endpoint in Brute.COMMON_ENDPOINTS:
-                _url = url + path + ('/' if len(path) > 0 else '') + endpoint
+                upload_url = url + path + ('/' if len(path) > 0 else '') + endpoint
 
                 try:
-                    res = requests.get(_url, timeout=timeout/1000)
+                    res = requests.get(upload_url, timeout=timeout / 1000)
 
                     for e in ShareX.Errors:
                         if e.value['content'].lower() in res.text.lower():
-                            return _url
-                    else:
-                        if res.status_code == 200:
-                            return _url
+                            return upload_url
+                    # else:
+                    #     if res.status_code == 200:
+                    #         return upload_url
                 except Exception:
                     pass
 
@@ -69,6 +70,7 @@ class Brute:
         for field_name in Brute.COMMON_FIELD_NAMES:
             try:
                 res = ShareX.upload(upload_url, secret=invalid_secret, field_name=field_name)
+
                 if ShareX.Errors.INVALID_SECRET.value['content'].lower() in res.text.lower():
                     return field_name
             except Exception:

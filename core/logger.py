@@ -21,7 +21,7 @@ class Logger:
     @staticmethod
     def error(message, should_exit=True):
         """ Log error message to stderr """
-        Logger.__log('ERRO', '\x1b[91m', message, sys.stderr)
+        Logger.__log('FAIL', '\x1b[91m', message, sys.stderr)
 
         if should_exit:
-            sys.exit(1)
+            sys.exit(-1)

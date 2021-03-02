@@ -1,4 +1,5 @@
 import requests
+import io
 
 from enum import Enum
 
@@ -20,7 +21,8 @@ class ShareX:
         }
 
     @staticmethod
-    def upload(url, file_data, file_name='myfile.txt', form_name='sharex', secret=None, field_name='secret'):
+    def upload(url, file_data=io.BytesIO(b'ShareX text upload test'), file_name='Test.txt', form_name='sharex', secret=None, field_name='secret'):
+        """ Upload file to custom image uploader ShareX API """
         files = {form_name: (file_name, file_data, 'text/plain')}
 
         data = {field_name: secret} if secret is not None else {}

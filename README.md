@@ -2,7 +2,7 @@
 
  Pwn misconfigured sites running ShareX custom image uploader API through **RFI -> RCE**.
 
-![alt](https://raw.githubusercontent.com/ecriminal/PwnX.py/master/images/PwnX.png)
+![alt](https://raw.githubusercontent.com/ecriminal/PwnX.py/master/img/PwnX.png)
 *XAMPP running as SYSTEM kek*
 
 ## Requirements
@@ -19,10 +19,10 @@
 
 ## TODO
 
-* [ ] Encode PHP web shell payload to bypass WAFs
+* [ ] Encode PHP web shell payload to bypass WAFs and AVs
 * [ ] Custom PHP web shell payload command-line option
 * [ ] File upload feature in built-in PHP web shell
 * [ ] File download feature in built-in PHP web shell
 * [ ] Change direction feature in built-in PHP web shell
 * [ ] Auto remove PHP web shell
-* [ ] Log previous web shells
+* [x] Save web shells to file

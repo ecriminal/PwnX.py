@@ -9,4 +9,5 @@ class Banner:
 
     @staticmethod
     def print():
+        """ Output banner """
         print(Banner.__BANNER)

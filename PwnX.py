@@ -26,7 +26,7 @@ def main():
     Banner.print()
     
     Logger.warning('use with caution. you are responsible for your actions')
-    Logger.warning('developer assume no liability and are not responsible for any misuse or damage')
+    Logger.warning('developer assume no liability and is not responsible for any misuse or damage')
 
     Logger.empty_line()
 

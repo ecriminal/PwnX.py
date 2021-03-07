@@ -15,8 +15,13 @@ class Logger:
 
     @staticmethod
     def info(message):
-        """ Log info message to stdout """
+        """ Log information message to stdout """
         Logger.__log('INFO', '\x1b[94m', message)
+        
+    @staticmethod
+    def warning(message):
+        """ Log warning message to stdout """
+        Logger.__log('WARN', '\x1b[93m', message)
 
     @staticmethod
     def error(message, should_exit=True):
@@ -25,3 +30,8 @@ class Logger:
 
         if should_exit:
             sys.exit(-1)
+
+    @staticmethod
+    def empty_line():
+        """ Log a newline `\n` character to stdout """
+        print()

@@ -35,7 +35,7 @@ class Shell:
 
         user = Shell.execute(shell_url, 'whoami').strip()
 
-        print()  # outputs a newline character, duh??
+        Logger.empty_line()
 
         while True:
             try:
